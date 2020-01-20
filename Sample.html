@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CiA Web Service Call Testing</title>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="./Style.css" type="text/css">
+</head>
+<body>
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+        </div>
+      </div>
+    <div class="outline">
+            <div>
+                <form id="WebServiceForm">
+                    <h3></h3>
+
+
+                 <div class="column">
+                    <div class="question">
+                        <label for="source_chart" class="inputlabel">Chart Name</label>
+                        <div class="inputform">
+                            <input type="text" class="boxform" id="source_chart" value="NATACC" required="required">
+                        </div>
+                    </div>
+                    <div class="question">
+                        <label for="source_search" class="inputlabel">Chart Name</label>
+                        <div class="inputform">
+                            <input type="text" class="boxform" id="source_search" value="?Expense8 = Y" required="required">
+                        </div>
+                    </div>
+                  </div>                 
+                 <div class="column">
+                    <div class="question">
+                        <label for="source_username" class="inputlabel">Username</label>
+                        <div class="inputform">
+                            <input type="text" class="boxform" id="source_username" value="E8_WS_USER" required="required">
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label for="source_password" class="inputlabel">Password</label>
+                        <div class="inputform">
+                            <input type="password" class="boxform" id="source_password" placeholder="Password" value="" required="required">
+                        </div>
+                    </div>
+                    <div class="question">
+                        <label for="source_url" class="inputlabel">URL</label>
+                        <div class="inputform">
+                            <input type="url" class="boxform url" id="source_url" value="https://dtr.t1cloud.com/T1Default/CiAnywhere/Web/DTR/Api/T1/WS/v1/ChartAccountGL/ListComponents" required="required">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="question">
+                            <button type="submit" class="subbutton">Submit</button>
+                    </div>
+                </div>
+                </form>
+                <div class="column">
+                  <h2>Result</h2>
+                  <pre id="result"  class="resulttext"></pre>
+                  <div id='loader' style="display:none" ><img src="./ajax-loader.gif"/></div>
+
+                </div>      
+            </div>
+    </div>
+
+
+
+    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script>
+
+
+$('#WebServiceForm').submit(function (event) {
+
+
+                event.preventDefault();
+                $("#result").text("").show();
+
+                var sourceUsername = $("#source_username").val();
+                var sourcePassword = $("#source_password").val();
+                var sourceUrl = $("#source_url").val();
+                var sourceChart = $("#source_chart").val();
+                var sourceSearch = $("#source_search").val();
+
+
+
+//Call the service
+
+
+//The section saved into the variable "savedata" below needs to match the example schema provided in the Documentation secton of the TechOne web service definition
+
+               var saveData =
+         {
+            "Items": [
+               {
+                "ChartName": sourceChart,
+                "Status": "A",
+                "Search": sourceSearch
+          }
+        ]
+      }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: sourceUrl,
+                    async: false,
+                    data: JSON.stringify(saveData),
+                    username: sourceUsername,
+                    password: sourcePassword,
+                    contentType: 'application/json; charset=utf-8',
+                    crossDomain: true,
+                    beforeSend: function() {
+                                $("#loader").show();
+                                },
+                    complete: function(){
+                               $('#loader').hide();
+                               },
+                    headers: {
+                         Authorization: "Basic " + btoa(sourceUsername + ":" + sourcePassword)
+                    },
+                   xhrFields: {
+                       withCredentials: true
+                    },
+                     success: displayResults,
+                     error: showError
+
+                });
+           
+
+
+          function AddToLog(logText) {
+                var current = $("#result").text();
+                if (current.length > 0) {
+                    current = current + "\r\n\r\n   -------------------------------------   \r\n\r\n";
+                }
+
+                $("#result").text(current + logText);
+            }
+
+
+         function showError(jqXHR, status, error) {
+                AddToLog("Call Error: \r\n" + jqXHR.responseText);
+                console.log(jqXHR.responseJSON);
+                console.log(status);
+                console.log(error);
+            }
+
+
+          function displayResults(data, status, jqXHR) {
+
+
+                 resultText = "Accounts Returned: " + Object.keys(data.Items[0].ReadComponents).length + "\r\n\n";
+
+                $("#result").text(resultText);
+                    
+     }
+
+ });
+
+
+    </script>
+</body>
+</html>

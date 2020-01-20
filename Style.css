@@ -1,0 +1,60 @@
+
+
+h3 {
+    font  : 40px Calibri;
+    padding-top : 60px;
+    margin  : 0px;
+}
+
+
+h2 {
+    font  : 20px Calibri;
+    padding-top : 0px;
+    margin  : 0px;
+    text-align: left
+}
+
+
+.question{
+
+    font  : 15px Calibri;
+    padding : 5px;
+    padding-left: 40px;
+    margin  : 5px;
+
+}
+
+.inputform{
+
+    font  : 15px Calibri;
+    padding-top : 3px;
+    padding-left: 0px;
+    margin  : 3px;
+}
+
+.boxform {
+
+    border-radius: 4px;
+}
+
+.column {
+    float: left;
+    width: 33.33%;
+    padding-top: 50px;
+}
+
+.url {
+    width: 200px;
+}
+
+.subbutton{
+    border-radius: 5px;
+}
+
+
+.resulttext {
+    font  : 16px Lucida Sans Typewriter;
+    padding-top : 5px;
+    margin  : 2px;
+    border-top-style: solid;
+}
